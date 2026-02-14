@@ -58,7 +58,7 @@ const LoginPage = () => {
       </div>
 
       {/* 로그인 박스 */}
-      <div className="w-full max-w-sm bg-[#161A22] text-[#7E8690] rounded-xl shadow-[0_0_0_1px_#262B36] p-6 space-y-5 border border-[#252A35]">
+      <div className="w-full max-w-md bg-[#161A22] text-[#7E8690] rounded-xl shadow-[0_0_0_1px_#262B36] p-6 space-y-5 border border-[#252A35]">
         <div className="space-y-1 text-center">
           <h1 className="text-2xl font-bold text-white">시작하기</h1>
           <p className="text-sm">로그인하거나 새 계정을 만들어보세요</p>

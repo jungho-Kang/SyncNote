@@ -72,6 +72,8 @@ const Login = () => {
         <Button className="w-full p-3 bg-[#6F4CDB] hover:bg-[#5C3CCF] text-white font-semibold active:scale-[0.98] transition-all duration-150">
           로그인
         </Button> */}
+
+        {/* 테스트용 UI */}
         <div className="space-y-2 text-white">
           <Label htmlFor="test">테스트</Label>
           <Input
