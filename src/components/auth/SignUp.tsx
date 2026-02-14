@@ -3,15 +3,20 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const SignUp = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // TODO: 회원가입
+  };
   return (
-    <div className="space-y-3">
+    <form className="space-y-3" onSubmit={handleSubmit}>
       <div className="space-y-2 text-white">
         <Label htmlFor="nickname">닉네임</Label>
         <Input
           id="nickname"
           type="text"
           placeholder="사용할 닉네임"
-          className="border-[#262B36] bg-[#101319]"
+          className="border-[#262B36] bg-[#101319] focus:border-[#6F4CDB] focus:ring-1 focus:ring-[#6F4CDB] transition"
+          required
         />
       </div>
 
@@ -21,7 +26,8 @@ const SignUp = () => {
           id="email"
           type="email"
           placeholder="example@email.com"
-          className="border-[#262B36] bg-[#101319]"
+          className="border-[#262B36] bg-[#101319] focus:border-[#6F4CDB] focus:ring-1 focus:ring-[#6F4CDB] transition"
+          required
         />
       </div>
 
@@ -31,13 +37,16 @@ const SignUp = () => {
           id="password"
           type="password"
           placeholder="4자 이상 입력하세요"
-          className="border-[#262B36] bg-[#101319]"
+          className="border-[#262B36] bg-[#101319] focus:border-[#6F4CDB] focus:ring-1 focus:ring-[#6F4CDB] transition"
+          required
         />
       </div>
       <div className="pt-3">
-        <Button className="w-full p-3">회원가입</Button>
+        <Button className="w-full p-3 bg-[#6F4CDB] hover:bg-[#5C3CCF] text-white font-semibold active:scale-[0.98] transition-all duration-150">
+          회원가입
+        </Button>
       </div>
-    </div>
+    </form>
   );
 };
 

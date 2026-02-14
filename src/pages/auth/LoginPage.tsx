@@ -11,24 +11,24 @@ import Logo from "@/assets/images/logo.svg";
 import { MessagesSquare, Notebook, PencilLine } from "lucide-react";
 
 const LoginPage = () => {
-  const [mode, setMode] = useState<"login" | "signup">("login"); // 모드 상태
+  const [mode, setMode] = useState<"login" | "signup">("login");
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#101319] space-y-6">
       <div>
         <div className="flex items-center gap-3 justify-center">
           <img src={Logo} alt="로고 이미지" />
-          <div className="text-[#fff] font-semibold text-[28px] font-logo tracking-tight leading-none">
+          <div className="text-[#fff] font-semibold text-[28px] font-logo">
             <span>Sync</span>
             <span className="text-[#C4B6F0] font-medium">Note</span>
           </div>
         </div>
 
         <div className="flex flex-col items-center text-center space-y-1 max-w-xs mt-5">
-          <p className="text-lg font-semibold text-white tracking-tight">
+          <p className="text-lg font-semibold text-white">
             같이 모여 생각을 적어보세요
           </p>
-          <p className="text-sm text-[#9CA3AF] leading-relaxed">
+          <p className="text-sm text-[#9CA3AF]">
             작은 기록들이 모여 하나의 이야기가 됩니다
           </p>
         </div>
@@ -58,10 +58,10 @@ const LoginPage = () => {
       </div>
 
       {/* 로그인 박스 */}
-      <div className="w-full max-w-sm bg-[#161A22] text-[#7E8690] rounded-xl shadow-md p-6 space-y-3 border border-[#252A35]">
-        <h1 className="text-2xl font-bold text-center text-white">시작하기</h1>
-        <div className="text-center text-sm">
-          로그인하거나 새 계정을 만들어보세요
+      <div className="w-full max-w-sm bg-[#161A22] text-[#7E8690] rounded-xl shadow-[0_0_0_1px_#262B36] p-6 space-y-5 border border-[#252A35]">
+        <div className="space-y-1 text-center">
+          <h1 className="text-2xl font-bold text-white">시작하기</h1>
+          <p className="text-sm">로그인하거나 새 계정을 만들어보세요</p>
         </div>
 
         {/* 토글 버튼 */}
