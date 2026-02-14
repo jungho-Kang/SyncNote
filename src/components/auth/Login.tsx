@@ -3,21 +3,47 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { SiKakaotalk } from "react-icons/si";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FindPassword from "./FindPassword";
+import axios from "axios";
 
 const Login = () => {
   const [showFindPassword, setShowFindPassword] = useState(false);
+  const [value, setValue] = useState("");
+  const [test, setTest] = useState("");
+
+  const postLogin = async () => {
+    try {
+      await axios.post("/api/v1/test", {});
+    } catch (error) {
+      console.log("에러 발생 : ", error);
+    }
+  };
+
+  const getTest = async () => {
+    try {
+      const res = await axios.get("/api/v1/test");
+      console.log(res.data);
+      setTest(res.data.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: 로그인
+    postLogin();
   };
+
+  useEffect(() => {
+    getTest();
+  }, []);
 
   return (
     <div className="space-y-5">
       <form className="space-y-3" onSubmit={handleSubmit}>
-        <div className="space-y-2 text-white">
+        <div>{test}</div>
+        {/* <div className="space-y-2 text-white">
           <Label htmlFor="email">이메일</Label>
           <Input
             id="email"
@@ -41,6 +67,25 @@ const Login = () => {
 
         <Button className="w-full p-3 bg-[#6F4CDB] hover:bg-[#5C3CCF] text-white font-semibold active:scale-[0.98] transition-all duration-150">
           로그인
+        </Button> */}
+        <div className="space-y-2 text-white">
+          <Label htmlFor="test">테스트</Label>
+          <Input
+            id="test"
+            type="text"
+            placeholder="테스트용"
+            value={value}
+            onChange={e => setValue(e.target.value)}
+            className="border-[#262B36] bg-[#101319] focus:border-[#6F4CDB] focus:ring-1 focus:ring-[#6F4CDB] transition"
+            required
+          />
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full p-3 bg-[#6F4CDB] hover:bg-[#5C3CCF] text-white font-semibold active:scale-[0.98] transition-all duration-150"
+        >
+          테스트 실행
         </Button>
       </form>
 

@@ -9,4 +9,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://api.mmm3.click",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });
