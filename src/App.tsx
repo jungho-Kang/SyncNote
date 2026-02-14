@@ -1,5 +1,11 @@
+import LoginPage from "@/pages/auth/LoginPage";
+
 const App = () => {
-  return <div>안녕</div>;
+  return (
+    <div>
+      <LoginPage />
+    </div>
+  );
 };
 
 export default App;
