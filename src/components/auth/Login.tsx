@@ -14,7 +14,11 @@ const Login = () => {
 
   const postLogin = async () => {
     try {
-      await axios.post("/api/v1/test", {});
+      const res = await axios.post("/api/v1/test", {
+        name: value,
+        age: 20,
+      });
+      alert(res.data.message);
     } catch (error) {
       console.log("에러 발생 : ", error);
     }
