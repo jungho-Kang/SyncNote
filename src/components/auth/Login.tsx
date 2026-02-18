@@ -6,11 +6,15 @@ import { SiKakaotalk } from "react-icons/si";
 import { useEffect, useState } from "react";
 import FindPassword from "./FindPassword";
 import axios from "axios";
+import { useAuthStore } from "@/store/authStore";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [showFindPassword, setShowFindPassword] = useState(false);
   const [value, setValue] = useState("");
   const [test, setTest] = useState("");
+  const login = useAuthStore(state => state.login);
+  const navigate = useNavigate();
 
   const postLogin = async () => {
     try {
@@ -36,7 +40,11 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    postLogin();
+    // postLogin();
+
+    // 로그인 한 상태로 변경
+    login();
+    navigate("/", { replace: true });
   };
 
   useEffect(() => {
