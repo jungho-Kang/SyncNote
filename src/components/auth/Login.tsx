@@ -16,17 +16,17 @@ const Login = () => {
   const login = useAuthStore(state => state.login);
   const navigate = useNavigate();
 
-  const postLogin = async () => {
-    try {
-      const res = await axios.post("/api/v1/test", {
-        name: value,
-        age: 20,
-      });
-      alert(res.data.message);
-    } catch (error) {
-      console.log("에러 발생 : ", error);
-    }
-  };
+  // const postLogin = async () => {
+  //   try {
+  //     const res = await axios.post("/api/v1/test", {
+  //       name: value,
+  //       age: 20,
+  //     });
+  //     alert(res.data.message);
+  //   } catch (error) {
+  //     console.log("에러 발생 : ", error);
+  //   }
+  // };
 
   const getTest = async () => {
     try {
