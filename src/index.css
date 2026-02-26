@@ -101,3 +101,34 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+/* alert 창 css */
+/* 모달 전체 padding 줄이기 */
+.swal-compact {
+  padding: 1.2rem !important;
+}
+/* 아이콘 크기 줄이기 */
+.swal-compact .swal2-icon {
+  transform: scale(0.75);
+  margin: 0.5rem auto;
+}
+/* 제목 줄이기 */
+.swal-compact .swal2-title {
+  font-size: 1.1rem;
+}
+/* 본문 텍스트 줄이기 */
+.swal-compact .swal2-html-container {
+  font-size: 0.9rem;
+}
+/* 버튼 크기 줄이기 */
+.swal-compact .swal2-confirm,
+.swal-compact .swal2-cancel {
+  font-size: 0.85rem;
+  padding: 0.4rem 1rem;
+}
+
+.swal-compact {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important; /* 필요시 제거 */
+}

@@ -1,66 +1,84 @@
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useState } from "react";
+
+import axios from "axios";
+import Swal from "sweetalert2";
+
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
 import { FcGoogle } from "react-icons/fc";
 import { SiKakaotalk } from "react-icons/si";
-import { useEffect, useState } from "react";
-import FindPassword from "./FindPassword";
-import axios from "axios";
-import { useAuthStore } from "@/store/authStore";
+
+import { useSessionAuth } from "@/hooks/useSessionAuth";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import FindPassword from "./FindPassword";
+
+interface LoginForm {
+  email: string;
+  password: string;
+}
 
 const Login = () => {
   const [showFindPassword, setShowFindPassword] = useState(false);
-  const [value, setValue] = useState("");
-  const [test, setTest] = useState("");
-  const login = useAuthStore(state => state.login);
+
+  const { login } = useSessionAuth();
   const navigate = useNavigate();
 
-  // const postLogin = async () => {
-  //   try {
-  //     const res = await axios.post("/api/v1/test", {
-  //       name: value,
-  //       age: 20,
-  //     });
-  //     alert(res.data.message);
-  //   } catch (error) {
-  //     console.log("에러 발생 : ", error);
-  //   }
-  // };
+  const { register, handleSubmit } = useForm<LoginForm>();
 
-  const getTest = async () => {
+  const showAlert = async (
+    title: string,
+    text: string,
+    icon: "success" | "error",
+  ) => {
+    return Swal.fire({
+      title,
+      text,
+      icon,
+      theme: "dark",
+      width: 360,
+      scrollbarPadding: false,
+      customClass: { popup: "swal-compact" },
+      confirmButtonText: "확인",
+      confirmButtonColor: "#6F4CDB",
+    });
+  };
+
+  const postLogin = async (data: LoginForm) => {
     try {
-      const res = await axios.get("/api/v1/test");
-      console.log(res.data);
-      setTest(res.data.message);
+      const res = await axios.post("/api/v1/auth/login", data);
+      const result = await showAlert(
+        "로그인 성공",
+        "정상적으로 로그인되었습니다.",
+        "success",
+      );
+      if (result.isConfirmed) {
+        login();
+        navigate("/", { replace: true });
+      }
+      console.log(res.data.message);
     } catch (error) {
-      console.log(error);
+      console.log("에러 발생 : ", error);
+      await showAlert("로그인 실패", "로그인 정보를 확인해주세요.", "error");
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // postLogin();
-
-    // 로그인 한 상태로 변경
-    login();
-    navigate("/", { replace: true });
+  const onSubmit = (data: LoginForm) => {
+    postLogin(data);
   };
-
-  useEffect(() => {
-    getTest();
-  }, []);
 
   return (
     <div className="space-y-5">
-      <form className="space-y-3" onSubmit={handleSubmit}>
-        <div>{test}</div>
-        {/* <div className="space-y-2 text-white">
+      <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+        <div className="space-y-2 text-white">
           <Label htmlFor="email">이메일</Label>
           <Input
             id="email"
             type="email"
             placeholder="example@email.com"
+            {...register("email", { required: true })}
             className="border-[#262B36] bg-[#101319] focus:border-[#6F4CDB] focus:ring-1 focus:ring-[#6F4CDB] transition"
             required
           />
@@ -72,24 +90,7 @@ const Login = () => {
             id="password"
             type="password"
             placeholder="비밀번호를 입력하세요"
-            className="border-[#262B36] bg-[#101319] focus:border-[#6F4CDB] focus:ring-1 focus:ring-[#6F4CDB] transition"
-            required
-          />
-        </div>
-
-        <Button className="w-full p-3 bg-[#6F4CDB] hover:bg-[#5C3CCF] text-white font-semibold active:scale-[0.98] transition-all duration-150">
-          로그인
-        </Button> */}
-
-        {/* 테스트용 UI */}
-        <div className="space-y-2 text-white">
-          <Label htmlFor="test">테스트</Label>
-          <Input
-            id="test"
-            type="text"
-            placeholder="테스트용"
-            value={value}
-            onChange={e => setValue(e.target.value)}
+            {...register("password", { required: true })}
             className="border-[#262B36] bg-[#101319] focus:border-[#6F4CDB] focus:ring-1 focus:ring-[#6F4CDB] transition"
             required
           />
@@ -99,7 +100,7 @@ const Login = () => {
           type="submit"
           className="w-full p-3 bg-[#6F4CDB] hover:bg-[#5C3CCF] text-white font-semibold active:scale-[0.98] transition-all duration-150"
         >
-          테스트 실행
+          로그인
         </Button>
       </form>
 

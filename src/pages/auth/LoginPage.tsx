@@ -12,7 +12,6 @@ import { MessagesSquare, Notebook, PencilLine } from "lucide-react";
 
 const LoginPage = () => {
   const [mode, setMode] = useState<"login" | "signup">("login");
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#101319] space-y-6">
       <div>

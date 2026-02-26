@@ -1,4 +1,6 @@
+import { api } from "@/api/api";
 import { Copy, LogIn, Plus, UsersIcon } from "lucide-react";
+import { useEffect } from "react";
 
 interface Room {
   id: string;
@@ -19,23 +21,19 @@ const rooms: Room[] = [
 ];
 
 const MainPage = () => {
+  const getUser = async () => {
+    try {
+      const res = await api.get("/users/profile");
+      console.log(res);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0B1220] to-[#0F1A2D] text-white">
-      {/* Header */}
-      <header className="flex justify-between items-center px-8 py-4 border-b border-[#1E293B]">
-        <div className="flex items-center gap-2 text-lg font-semibold">
-          <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-            C
-          </div>
-          CollabSpace
-        </div>
-
-        <div className="flex items-center gap-6 text-sm text-gray-300">
-          <span>안녕</span>
-          <button className="hover:text-white transition">로그아웃</button>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-gradient-to-b from-[#0B1220] to-[#0F1A2D] text-white overflow-auto scrollbar-hide">
       {/* Content */}
       <main className="px-8 py-10 max-w-6xl mx-auto">
         {/* Welcome */}
