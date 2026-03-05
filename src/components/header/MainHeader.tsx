@@ -21,6 +21,7 @@ const MainHeader = ({ handleLogout }: MainHeaderProps) => {
 
         {/* 우측 영역 */}
         <div className="flex items-center gap-5 text-sm">
+          {/* TODO: 닉네임 가져와서 정보 넣기 + 프로필사진 */}
           <span className="text-gray-300">햄찌</span>
 
           <button

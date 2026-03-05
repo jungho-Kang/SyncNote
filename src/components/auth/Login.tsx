@@ -21,7 +21,7 @@ interface LoginForm {
 }
 
 const Login = () => {
-  const [showFindPassword, setShowFindPassword] = useState(false);
+  const [isFindPasswordOpen, setIsFindPasswordOpen] = useState(false);
 
   const { login } = useSessionAuth();
   const navigate = useNavigate();
@@ -128,15 +128,16 @@ const Login = () => {
       <div className="flex justify-center">
         <button
           className="text-sm text-[#8F98A3] hover:text-[#C4B6F0] transition-colors"
-          onClick={() => setShowFindPassword(true)}
+          onClick={() => setIsFindPasswordOpen(true)}
         >
           비밀번호를 잊으셨나요?
         </button>
       </div>
 
-      {showFindPassword && (
-        <FindPassword onClose={() => setShowFindPassword(false)} />
-      )}
+      <FindPassword
+        isOpen={isFindPasswordOpen}
+        onClose={() => setIsFindPasswordOpen(false)}
+      />
     </div>
   );
 };

@@ -140,7 +140,7 @@ const SignUp = () => {
         <Input
           id="email"
           type="email"
-          placeholder="example@email.com"
+          placeholder="사용 중인 이메일을 입력하세요"
           {...register("email")}
           className="border-[#262B36] bg-[#101319] focus:border-[#6F4CDB] focus:ring-1 focus:ring-[#6F4CDB] transition"
         />
@@ -174,6 +174,9 @@ const SignUp = () => {
         >
           {isSubmitting ? "가입 중..." : "회원가입"}
         </Button>
+        <p className="text-xs text-gray-400 mt-2 text-center">
+          가입 후 이메일로 인증 링크가 발송됩니다.
+        </p>
       </div>
     </form>
   );
