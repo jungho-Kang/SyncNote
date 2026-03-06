@@ -7,6 +7,7 @@ import { LogIn, Plus } from "lucide-react";
 import RoomCard from "@/components/main/RoomCard";
 import JoinByCode from "@/components/main/JoinByCode";
 import RoomActionCard from "@/components/main/RoomActionCard";
+import { useNavigate } from "react-router-dom";
 
 interface Room {
   id: string;
@@ -49,6 +50,7 @@ const rooms: Room[] = [
 
 const MainPage = () => {
   const [isJoinByCodeOpen, setIsJoinByCodeOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getUser = async () => {
@@ -77,6 +79,7 @@ const MainPage = () => {
             icon={<Plus size={28} className="text-indigo-400" />}
             title="새 방 만들기"
             description="협업 워크스페이스를 생성합니다"
+            onClick={() => navigate("/room")}
           />
 
           <RoomActionCard
