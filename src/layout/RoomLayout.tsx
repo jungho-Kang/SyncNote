@@ -3,9 +3,10 @@ import RoomHeader from "@/components/header/RoomHeader";
 
 const RoomLayout = () => {
   return (
-    <div className="min-h-screen bg-[#0B1220] text-white">
+    <div className="h-screen bg-[#0B1220] text-white flex flex-col">
       <RoomHeader />
-      <main className="p-6">
+
+      <main className="flex-1 px-4 py-4 overflow-hidden">
         <Outlet />
       </main>
     </div>

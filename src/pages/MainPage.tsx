@@ -4,9 +4,9 @@ import { api } from "@/api/api";
 
 import { LogIn, Plus } from "lucide-react";
 
-import RoomCard from "@/components/room/RoomCard";
-import JoinByCode from "@/components/room/JoinByCode";
-import RoomActionCard from "@/components/room/RoomActionCard";
+import RoomCard from "@/components/main/RoomCard";
+import JoinByCode from "@/components/main/JoinByCode";
+import RoomActionCard from "@/components/main/RoomActionCard";
 
 interface Room {
   id: string;

@@ -38,7 +38,7 @@ const RoomCard = ({
     >
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-semibold text-white">{name}</h3>
-        <div
+        <button
           onClick={handleCopy}
           className="flex items-center gap-2 text-sm text-gray-400 hover:text-indigo-400 transition group"
         >
@@ -51,7 +51,7 @@ const RoomCard = ({
             />
           )}
           {code}
-        </div>
+        </button>
       </div>
 
       <div className="text-sm text-gray-400 flex justify-between">
