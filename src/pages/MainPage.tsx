@@ -1,76 +1,84 @@
 import { useEffect, useState } from "react";
 
-import { api } from "@/api/api";
-
+import axios from "axios";
+import Swal from "sweetalert2";
 import { LogIn, Plus } from "lucide-react";
 
-import RoomCard from "@/components/main/RoomCard";
+import { useUserStore } from "@/store/userStore";
+
+import CreateRoom from "@/components/main/CreateRoom";
 import JoinByCode from "@/components/main/JoinByCode";
 import RoomActionCard from "@/components/main/RoomActionCard";
+import RoomCard from "@/components/main/RoomCard";
 import { useNavigate } from "react-router-dom";
 
 interface Room {
-  id: string;
-  name: string;
-  code: string;
-  createdAt: string;
-  members: number;
+  id: number;
+  title: string;
+  description: string;
+  visibility: "PRIVATE" | "PUBLIC" | "INVITE_ONLY";
+  inviteCode: string;
+  ownerId: number;
 }
 
-const rooms: Room[] = [
-  {
-    id: "1",
-    name: "sdffd",
-    code: "ZRFMXT",
-    createdAt: "02/12 17:29",
-    members: 1,
-  },
-  {
-    id: "2",
-    name: "asdfd",
-    code: "AXFEDE",
-    createdAt: "02/13 10:29",
-    members: 6,
-  },
-  {
-    id: "3",
-    name: "wwdrd",
-    code: "GGERDS",
-    createdAt: "02/15 08:29",
-    members: 5,
-  },
-  {
-    id: "4",
-    name: "drdcs",
-    code: "DDWSAZ",
-    createdAt: "02/19 20:29",
-    members: 3,
-  },
-];
+interface CreateRoom {
+  title: string;
+  visibility: "PRIVATE" | "PUBLIC" | "INVITE_ONLY";
+}
 
 const MainPage = () => {
-  const [isJoinByCodeOpen, setIsJoinByCodeOpen] = useState(false);
+  const nickname = useUserStore(state => state.nickname);
   const navigate = useNavigate();
+  const [rooms, setRooms] = useState<Room[] | null>(null);
+  const [isJoinByCodeOpen, setIsJoinByCodeOpen] = useState(false);
+  const [isCreateRoomOpen, setIsCreateRoomOpen] = useState(false);
+
+  const postCreateRoom = async (data: CreateRoom) => {
+    try {
+      const res = await axios.post("/api/v1/rooms", data);
+
+      // roomId
+      const roomId = res.data.data.id;
+      console.log(res.data.data.id);
+      const result = await Swal.fire({
+        title: "방 생성 완료",
+        text: "방 생성에 성공하셨습니다.",
+        icon: "success",
+        theme: "dark",
+        width: 360,
+        scrollbarPadding: false,
+        customClass: {
+          popup: "swal-compact",
+        },
+        confirmButtonText: "확인",
+        confirmButtonColor: "#6F4CDB",
+      });
+      if (result.isConfirmed) {
+        navigate(`/room/${roomId}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const getUser = async () => {
+    const getRoom = async () => {
       try {
-        const res = await api.get("/users/profile");
-        console.log(res);
+        const res = await axios.get("/api/v1/rooms");
+        console.log("모야호~~~~~~~~~~~~~~~~~~~", res.data.data);
+        setRooms(res.data.data);
       } catch (error) {
         console.log(error);
       }
     };
-
-    getUser();
+    getRoom();
   }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0B1220] to-[#0F1A2D] text-white overflow-auto scrollbar-hide">
       <main className="px-8 py-10 max-w-6xl mx-auto">
         <section className="mb-10">
-          {/* TODO: 사용자 정보 가져오기 */}
-          <h1 className="text-2xl font-bold mb-2">안녕하세요, 안녕님</h1>
+          <h1 className="text-2xl font-bold mb-2">안녕하세요, {nickname}님</h1>
           <p className="text-gray-400">방을 만들거나 코드로 참여하세요.</p>
         </section>
 
@@ -79,7 +87,7 @@ const MainPage = () => {
             icon={<Plus size={28} className="text-indigo-400" />}
             title="새 방 만들기"
             description="협업 워크스페이스를 생성합니다"
-            onClick={() => navigate("/room")}
+            onClick={() => setIsCreateRoomOpen(true)}
           />
 
           <RoomActionCard
@@ -93,7 +101,7 @@ const MainPage = () => {
         <section>
           <h2 className="text-lg font-semibold mb-4">내 방 목록</h2>
 
-          {rooms.length === 0 ? (
+          {!rooms ? (
             <p className="text-gray-500 text-sm">아직 생성된 방이 없습니다.</p>
           ) : (
             <div className="grid md:grid-cols-3 gap-6">
@@ -101,10 +109,10 @@ const MainPage = () => {
                 <RoomCard
                   key={room.id}
                   id={room.id}
-                  name={room.name}
-                  code={room.code}
-                  members={room.members}
-                  createdAt={room.createdAt}
+                  name={room.title}
+                  code={room.inviteCode}
+                  // members={room.members}
+                  // createdAt={room.createdAt}
                   onClick={() => console.log(room.id)}
                 />
               ))}
@@ -123,6 +131,19 @@ const MainPage = () => {
           // await api.post("/rooms/join", { code });
 
           setIsJoinByCodeOpen(false);
+        }}
+      />
+
+      <CreateRoom
+        isOpen={isCreateRoomOpen}
+        onClose={() => setIsCreateRoomOpen(false)}
+        onSubmit={title => {
+          const createRoomData: CreateRoom = {
+            title,
+            visibility: "INVITE_ONLY",
+          };
+          postCreateRoom(createRoomData);
+          setIsCreateRoomOpen(false);
         }}
       />
     </div>

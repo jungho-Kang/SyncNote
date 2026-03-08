@@ -31,7 +31,7 @@ const App = () => {
             </ProtectedRoute>
           }
         >
-          <Route path="/room" element={<RoomPage />} />
+          <Route path="/room/:id" element={<RoomPage />} />
         </Route>
       </Routes>
     </Router>

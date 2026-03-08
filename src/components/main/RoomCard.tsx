@@ -2,11 +2,11 @@ import { Copy, Check, UsersIcon } from "lucide-react";
 import { useState } from "react";
 
 interface RoomCardProps {
-  id: string;
+  id: number;
   name: string;
   code: string;
-  members: number;
-  createdAt: string;
+  members?: number;
+  createdAt?: string;
   onClick?: () => void;
 }
 
@@ -31,8 +31,7 @@ const RoomCard = ({
   };
 
   return (
-    <button
-      type="button"
+    <div
       onClick={onClick}
       className="bg-[#111827] border border-[#1F2937] rounded-xl p-5 hover:border-blue-500 transition-all duration-200 cursor-pointer"
     >
@@ -61,7 +60,7 @@ const RoomCard = ({
         </div>
         <span>{createdAt}</span>
       </div>
-    </button>
+    </div>
   );
 };
 

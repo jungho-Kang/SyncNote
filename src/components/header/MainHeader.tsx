@@ -1,12 +1,20 @@
 import Logo from "@/assets/images/logo.svg";
+import { useUserStore } from "@/store/userStore";
 
 import { LogOut } from "lucide-react";
+import { useEffect } from "react";
 
 interface MainHeaderProps {
   handleLogout: () => void;
 }
 
 const MainHeader = ({ handleLogout }: MainHeaderProps) => {
+  const nickname = useUserStore(state => state.nickname);
+
+  useEffect(() => {
+    console.log(nickname);
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-[#161A22]/80 border-b border-white/5">
       <div className="max-w-6xl mx-auto px-8 py-5 flex justify-between items-center">
@@ -21,8 +29,12 @@ const MainHeader = ({ handleLogout }: MainHeaderProps) => {
 
         {/* 우측 영역 */}
         <div className="flex items-center gap-5 text-sm">
-          {/* TODO: 닉네임 가져와서 정보 넣기 + 프로필사진 */}
-          <span className="text-gray-300">햄찌</span>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#6F4CDB] text-white font-semibold">
+              {nickname?.[0] || "?"}
+            </div>
+            <span className="text-gray-300">{nickname}</span>
+          </div>
 
           <button
             className="group flex items-center gap-1.5 text-gray-400 hover:text-white transition"

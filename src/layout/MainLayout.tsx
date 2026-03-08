@@ -1,12 +1,24 @@
+import { useEffect } from "react";
+
 import Swal from "sweetalert2";
 
-import MainHeader from "@/components/header/MainHeader";
-import { useSessionAuth } from "@/hooks/useSessionAuth";
 import { Outlet, useNavigate } from "react-router-dom";
 
+import { useUserStore } from "@/store/userStore";
+import { useSessionAuth } from "@/hooks/useSessionAuth";
+
+import MainHeader from "@/components/header/MainHeader";
+
 const MainLayout = () => {
+  const fetchUser = useUserStore(state => state.fetchUser);
+
   const navigate = useNavigate();
   const { logout } = useSessionAuth();
+
+  useEffect(() => {
+    // 유저 정보 GET
+    fetchUser();
+  }, [fetchUser]);
 
   const handleLogout = async () => {
     const result = await Swal.fire({
