@@ -4,7 +4,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { LogIn, Plus } from "lucide-react";
 
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/stores/userStore";
 
 import CreateRoom from "@/components/main/CreateRoom";
 import JoinByCode from "@/components/main/JoinByCode";
@@ -56,6 +56,17 @@ const MainPage = () => {
       if (result.isConfirmed) {
         navigate(`/room/${roomId}`);
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const postJoinCode = async (code: string) => {
+    try {
+      const res = await axios.post("/api/v1/rooms/join", { inviteCode: code });
+      const roomId = res.data.data.roomId;
+      console.log("잘 보내 졌니??????", roomId);
+      navigate(`/room/${roomId}`);
     } catch (error) {
       console.log(error);
     }
@@ -113,7 +124,7 @@ const MainPage = () => {
                   code={room.inviteCode}
                   // members={room.members}
                   // createdAt={room.createdAt}
-                  onClick={() => console.log(room.id)}
+                  onClick={() => navigate(`/room/${room.id}`)}
                 />
               ))}
             </div>
@@ -125,11 +136,7 @@ const MainPage = () => {
         isOpen={isJoinByCodeOpen}
         onClose={() => setIsJoinByCodeOpen(false)}
         onSubmit={code => {
-          console.log("입력 코드:", code);
-
-          // TODO: API 호출해서 방 입장 처리
-          // await api.post("/rooms/join", { code });
-
+          postJoinCode(code);
           setIsJoinByCodeOpen(false);
         }}
       />

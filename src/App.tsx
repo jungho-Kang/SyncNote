@@ -4,8 +4,8 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import MainLayout from "@/layout/MainLayout";
-import RoomLayout from "./layout/RoomLayout";
-import RoomPage from "./pages/RoomPage";
+import RoomLayout from "@/layout/RoomLayout";
+import RoomPage from "@/pages/RoomPage";
 
 const App = () => {
   return (

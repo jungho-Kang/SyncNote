@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 
 import { Outlet, useNavigate } from "react-router-dom";
 
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/stores/userStore";
 import { useSessionAuth } from "@/hooks/useSessionAuth";
 
 import MainHeader from "@/components/header/MainHeader";

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParticipantsPanelStore } from "@/stores/participantsPanelStore";
+import { useRoomDetailStore } from "@/stores/roomStore";
 import {
   ArrowLeft,
   Check,
@@ -7,10 +7,12 @@ import {
   PanelLeftClose,
   PanelRightClose,
 } from "lucide-react";
-import { useParticipantsPanelStore } from "@/store/participantsPanelStore";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const RoomHeader = () => {
   const navigate = useNavigate();
+  const roomDetail = useRoomDetailStore(state => state.roomDetail);
   const { isOpen, toggle } = useParticipantsPanelStore();
 
   const [copied, setCopied] = useState(false);
@@ -37,7 +39,7 @@ const RoomHeader = () => {
 
         <div className="flex items-center gap-4">
           <span className="text-sm font-semibold text-white tracking-tight">
-            test
+            {roomDetail.title}
           </span>
 
           <button
@@ -52,7 +54,7 @@ const RoomHeader = () => {
                 className="group-hover:scale-110 transition-transform"
               />
             )}
-            JZRDRG
+            {roomDetail.inviteCode}
           </button>
         </div>
       </div>
