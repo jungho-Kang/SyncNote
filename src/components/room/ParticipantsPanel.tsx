@@ -4,7 +4,6 @@ import { useUserStore } from "@/stores/userStore";
 const ParticipantsPanel = () => {
   const roomDetail = useRoomDetailStore(state => state.roomDetail);
   const userId = useUserStore(state => state.userId);
-  console.log("요기 찍히는중??", roomDetail);
 
   return (
     <div className="w-[260px] flex flex-col bg-[#0F172A] border-l border-[#1E293B]">
@@ -21,7 +20,9 @@ const ParticipantsPanel = () => {
         {roomDetail.participants?.map(user => (
           <div className="flex items-center justify-between px-3 py-2 rounded-md hover:bg-[#111827] transition">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-xs font-semibold">
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${user.userId === userId ? "bg-[#6F4CDB] text-white" : "bg-[#2A2F3A] text-[#A9A9A9]"}`}
+              >
                 {user.nickname.charAt(0)}
               </div>
 

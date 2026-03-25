@@ -1,5 +1,6 @@
 import { useParticipantsPanelStore } from "@/stores/participantsPanelStore";
 import { useRoomDetailStore } from "@/stores/roomStore";
+import { useUserStore } from "@/stores/userStore";
 import {
   ArrowLeft,
   Check,
@@ -13,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 const RoomHeader = () => {
   const navigate = useNavigate();
   const roomDetail = useRoomDetailStore(state => state.roomDetail);
+  const nickname = useUserStore(state => state.nickname);
   const { isOpen, toggle } = useParticipantsPanelStore();
 
   const [copied, setCopied] = useState(false);
@@ -61,8 +63,8 @@ const RoomHeader = () => {
 
       <div className="flex items-center gap-3">
         {/* TODO: 사용자 정보 넣기 */}
-        <div className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-xs font-semibold">
-          T
+        <div className="w-7 h-7 rounded-full bg-[#6F4CDB] flex items-center justify-center text-xs font-semibold">
+          {nickname.charAt(0)}
         </div>
 
         <button

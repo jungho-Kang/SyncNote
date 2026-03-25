@@ -1,7 +1,3 @@
-완전 GitHub용으로 최적화된 README 버전으로 만들어드렸어요. 뱃지, 컬러 강조, 테이블, 코드 블록 등 모두 GitHub에서 바로 예쁘게 보이도록 구성했습니다. ✨
-
----
-
 # 📝 SyncNote
 
 ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=white)

@@ -18,7 +18,7 @@ const MainLayout = () => {
   useEffect(() => {
     // 유저 정보 GET
     fetchUser();
-  }, [fetchUser]);
+  }, []);
 
   const handleLogout = async () => {
     const result = await Swal.fire({

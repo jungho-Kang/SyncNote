@@ -1,8 +1,15 @@
 import { MessageCircle } from "lucide-react";
 
-const ChatButton = () => {
+interface ChatButtonProps {
+  onClick: () => void;
+}
+
+const ChatButton = ({ onClick }: ChatButtonProps) => {
   return (
-    <button className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center text-white transition">
+    <button
+      onClick={onClick}
+      className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center text-white transition"
+    >
       <MessageCircle size={22} />
     </button>
   );
