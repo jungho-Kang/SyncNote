@@ -64,11 +64,8 @@ const SignUp = () => {
     try {
       const res = await axios.post("/api/v1/auth/signup", data);
 
-      // 로그아웃 시 모든 정보 쿠키에서 삭제하기
-      // user 정보 쿠키에 저장하기
       console.log("post한 user 정보", res.data.data.user);
 
-      // 자동으로 쿠키에 저장해줌 => getCookie사용해서 accessToken 사용만 하기
       console.log("post한 토큰 정보", res.data.data.tokens.accessToken);
 
       const result = await Swal.fire({

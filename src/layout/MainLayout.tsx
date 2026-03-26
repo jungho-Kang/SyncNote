@@ -8,12 +8,23 @@ import { useUserStore } from "@/stores/userStore";
 import { useSessionAuth } from "@/hooks/useSessionAuth";
 
 import MainHeader from "@/components/header/MainHeader";
+import axios from "axios";
 
 const MainLayout = () => {
   const fetchUser = useUserStore(state => state.fetchUser);
 
   const navigate = useNavigate();
   const { logout } = useSessionAuth();
+
+  const postLogout = async () => {
+    try {
+      const res = await axios.post("/api/v1/auth/logout");
+      console.log("결과??????", res);
+      logout();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     // 유저 정보 GET
@@ -38,6 +49,7 @@ const MainLayout = () => {
     });
 
     if (result.isConfirmed) {
+      await postLogout();
       const confirm = await Swal.fire({
         title: "로그아웃 완료",
         icon: "success",
@@ -51,7 +63,6 @@ const MainLayout = () => {
         confirmButtonColor: "#6F4CDB",
       });
       if (confirm.isConfirmed) {
-        logout();
         navigate("/auth", { replace: true });
       }
     }
