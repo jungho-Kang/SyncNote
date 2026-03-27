@@ -181,9 +181,7 @@ export default function ChatPanel({
             setIsComposing(false);
             setInput(e.currentTarget.value);
           }}
-          onChange={e => {
-            setInput(e.target.value);
-          }}
+          onChange={e => setInput(e.target.value)}
           onKeyDown={e => {
             if (e.key === "Enter" && !isComposing) {
               e.preventDefault();

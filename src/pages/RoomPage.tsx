@@ -23,7 +23,28 @@ const RoomPage = () => {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
 
+  // 안읽은 메세지 개수 출력
+  const getUnreadMessageCount = async () => {
+    try {
+      const res = await axios.get(
+        `/api/v1/rooms/${roomId}/messages/unread-count`,
+      );
+
+      const count = res.data.data.count;
+      console.log("이거 뜨는중이니?", count);
+      setUnreadMessageCount(count);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUnreadMessageCount();
+  }, [isChatOpen]);
+
+  // 방 정보 조회
   const getRoomDetail = async () => {
     try {
       const res = await axios.get(`/api/v1/rooms/${roomId}`);
@@ -34,7 +55,6 @@ const RoomPage = () => {
     }
   };
 
-  // 방 정보 조회
   useEffect(() => {
     getRoomDetail();
   }, [roomId, setRoomDetail]);
@@ -70,6 +90,7 @@ const RoomPage = () => {
           message => {
             const data = JSON.parse(message.body);
             console.log("실시간 메시지", data);
+            getUnreadMessageCount();
 
             setMessages(prev => {
               if (prev.some(msg => msg.id === data.id)) return prev;
@@ -129,7 +150,12 @@ const RoomPage = () => {
       <MemoPanel />
       <WhiteBoard />
       {isParticipantsOpen && <ParticipantsPanel />}
-      {!isChatOpen && <ChatButton onClick={() => setIsChatOpen(true)} />}
+      {!isChatOpen && (
+        <ChatButton
+          unreadMessageCount={unreadMessageCount}
+          onClick={() => setIsChatOpen(true)}
+        />
+      )}
 
       <ChatPanel
         handleChatClose={() => setIsChatOpen(false)}
