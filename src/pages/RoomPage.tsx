@@ -13,12 +13,15 @@ import { useRoomDetailStore } from "@/stores/roomStore";
 import { connectSocket } from "@/socket/socketClient";
 import { useUserStore } from "@/stores/userStore";
 
+import type { Message } from "@/types/Message";
+
 const RoomPage = () => {
   const { id: roomId } = useParams();
   const fetchUser = useUserStore(state => state.fetchUser);
   const setRoomDetail = useRoomDetailStore(state => state.setRoomDetail);
   const isParticipantsOpen = useParticipantsPanelStore(state => state.isOpen);
 
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   // 방 정보 조회
@@ -36,18 +39,62 @@ const RoomPage = () => {
     getRoomDetail();
   }, [roomId, setRoomDetail]);
 
+  // 초기 메세지 조회
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const res = await axios.get(`/api/v1/rooms/${roomId}/messages`);
+        const data = res.data.data;
+        console.log(data);
+
+        setMessages(data.messages); // 👈 그대로 넣는다
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (roomId) getMessages();
+  }, [roomId]);
+
   // 소켓 연결 + 구독
   useEffect(() => {
-    let subscription: any;
+    let subscriptions: any[] = [];
 
     const initSocket = async () => {
       try {
         const client = await connectSocket();
 
-        subscription = client.subscribe("/topic/room/rooms", message => {
-          const data = JSON.parse(message.body);
-          console.log("실시간 메시지:", data);
-        });
+        // 메시지 구독
+        const messageSub = client.subscribe(
+          `/topic/rooms/${roomId}/messages`,
+          message => {
+            const data = JSON.parse(message.body);
+            console.log("실시간 메시지", data);
+
+            setMessages(prev => {
+              if (prev.some(msg => msg.id === data.id)) return prev;
+
+              const updated = [...prev, data];
+
+              return updated.sort(
+                (a, b) =>
+                  new Date(a.createdAt).getTime() -
+                  new Date(b.createdAt).getTime(),
+              );
+            });
+          },
+        );
+
+        // 읽음 구독
+        const readSub = client.subscribe(
+          `/topic/rooms/${roomId}/read`,
+          message => {
+            const data = JSON.parse(message.body);
+            console.log("읽음 처리:", data);
+          },
+        );
+
+        subscriptions = [messageSub, readSub];
       } catch (error) {
         console.error("소켓 연결 실패", error);
       }
@@ -59,7 +106,7 @@ const RoomPage = () => {
 
     // cleanup 함수
     return () => {
-      subscription?.unsubscribe();
+      subscriptions.forEach(sub => sub.unsubscribe());
     };
   }, [roomId]);
 
@@ -78,6 +125,7 @@ const RoomPage = () => {
       <ChatPanel
         handleChatClose={() => setIsChatOpen(false)}
         isOpen={isChatOpen}
+        messages={messages}
       />
     </div>
   );

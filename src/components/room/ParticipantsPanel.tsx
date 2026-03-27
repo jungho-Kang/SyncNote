@@ -18,7 +18,10 @@ const ParticipantsPanel = () => {
       {/* list */}
       <div className="flex flex-col p-2">
         {roomDetail.participants?.map(user => (
-          <div className="flex items-center justify-between px-3 py-2 rounded-md hover:bg-[#111827] transition">
+          <div
+            key={user.userId}
+            className="flex items-center justify-between px-3 py-2 rounded-md hover:bg-[#111827] transition"
+          >
             <div className="flex items-center gap-3">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${user.userId === userId ? "bg-[#6F4CDB] text-white" : "bg-[#2A2F3A] text-[#A9A9A9]"}`}
