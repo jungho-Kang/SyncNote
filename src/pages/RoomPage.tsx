@@ -24,18 +24,18 @@ const RoomPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+  const getRoomDetail = async () => {
+    try {
+      const res = await axios.get(`/api/v1/rooms/${roomId}`);
+      const data = res.data.data;
+      setRoomDetail(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // 방 정보 조회
   useEffect(() => {
-    const getRoomDetail = async () => {
-      try {
-        const res = await axios.get(`/api/v1/rooms/${roomId}`);
-        const data = res.data.data;
-        setRoomDetail(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     getRoomDetail();
   }, [roomId, setRoomDetail]);
 
@@ -97,9 +97,9 @@ const RoomPage = () => {
         // 참여자 구독
         const participantsSub = client.subscribe(
           `/topic/rooms/${roomId}/participants`,
-          message => {
-            const data = JSON.parse(message.body);
-            console.log("참가자 변경:", data);
+          () => {
+            console.log("참가자 변경 JOIN이벤트 발생!");
+            getRoomDetail();
           },
         );
 
