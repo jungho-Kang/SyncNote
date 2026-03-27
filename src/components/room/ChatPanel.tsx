@@ -25,6 +25,8 @@ export default function ChatPanel({
   const roomId = Number(id);
 
   const [input, setInput] = useState("");
+  // IOS기기 전용 버그 수정 코드(IME 입력 안정화)
+  const [isComposing, setIsComposing] = useState(false);
 
   // 채팅 보내기 함수
   const handleSend = () => {
@@ -173,10 +175,20 @@ export default function ChatPanel({
       <div className="flex items-center gap-2 p-2 border-t border-[#1F2937]">
         <input
           value={input}
-          onChange={e => setInput(e.target.value)}
+          // IOS기기 전용 버그 수정 코드
+          onCompositionStart={() => setIsComposing(true)}
+          onCompositionEnd={e => {
+            setIsComposing(false);
+            setInput(e.currentTarget.value);
+          }}
+          onChange={e => {
+            if (!isComposing) {
+              setInput(e.target.value);
+            }
+          }}
           onKeyDown={e => {
-            if (e.key === "Enter") {
-              e.preventDefault(); // 필수
+            if (e.key === "Enter" && !isComposing) {
+              e.preventDefault();
               handleSend();
             }
           }}
