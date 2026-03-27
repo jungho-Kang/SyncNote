@@ -19,13 +19,19 @@ const RoomHeader = () => {
 
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async () => {
-    // await navigator.clipboard.writeText(code);
-    setCopied(true);
+  const handleCopy = async (code: string) => {
+    if (!code) return;
 
-    setTimeout(() => {
-      setCopied(false);
-    }, 1500);
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 1500);
+    } catch (error) {
+      console.error("복사 실패", error);
+    }
   };
 
   return (
@@ -45,7 +51,7 @@ const RoomHeader = () => {
           </span>
 
           <button
-            onClick={handleCopy}
+            onClick={() => handleCopy(roomDetail.inviteCode)}
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#111827] border border-[#1E293B] text-xs text-gray-300 hover:bg-[#1E293B] hover:text-white transition"
           >
             {copied ? (

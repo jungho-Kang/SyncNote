@@ -17,6 +17,7 @@ export default function ChatPanel({
   isOpen,
   messages,
 }: ChatPanelProps) {
+  const lastReadMessageIdRef = useRef<number | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const userId = useUserStore(state => state.userId);
 
@@ -25,6 +26,7 @@ export default function ChatPanel({
 
   const [input, setInput] = useState("");
 
+  // 채팅 보내기 함수
   const handleSend = () => {
     if (!input.trim()) return;
 
@@ -43,6 +45,32 @@ export default function ChatPanel({
 
     setInput("");
   };
+
+  // 마지막으로 읽은 메세지 Id값 보내기
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // 마지막으로 읽은 메세지 Id값
+    const lastReadMessageId = messages[messages.length - 1]?.id;
+    if (!lastReadMessageId) return;
+
+    // 이미 보낸 id면 스킵
+    if (lastReadMessageIdRef.current === lastReadMessageId) return;
+
+    const client = getClient();
+    if (!client) return;
+
+    client.publish({
+      destination: "/app/chat/read",
+      body: JSON.stringify({
+        roomId,
+        lastReadMessageId,
+        userId,
+      }),
+    });
+
+    lastReadMessageIdRef.current = lastReadMessageId;
+  }, [messages, isOpen]);
 
   // 자동 스크롤
   useEffect(() => {

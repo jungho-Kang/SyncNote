@@ -47,7 +47,7 @@ const RoomPage = () => {
         const data = res.data.data;
         console.log(data);
 
-        setMessages(data.messages); // 👈 그대로 넣는다
+        setMessages(data.messages);
       } catch (error) {
         console.log(error);
       }
@@ -85,7 +85,7 @@ const RoomPage = () => {
           },
         );
 
-        // 읽음 구독
+        // 메세지 읽음처리 구독
         const readSub = client.subscribe(
           `/topic/rooms/${roomId}/read`,
           message => {
@@ -94,7 +94,16 @@ const RoomPage = () => {
           },
         );
 
-        subscriptions = [messageSub, readSub];
+        // 참여자 구독
+        const participantsSub = client.subscribe(
+          `/topic/rooms/${roomId}/participants`,
+          message => {
+            const data = JSON.parse(message.body);
+            console.log("참가자 변경:", data);
+          },
+        );
+
+        subscriptions = [messageSub, readSub, participantsSub];
       } catch (error) {
         console.error("소켓 연결 실패", error);
       }
