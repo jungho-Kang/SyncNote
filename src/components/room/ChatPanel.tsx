@@ -102,64 +102,67 @@ export default function ChatPanel({
           const prev = messages[index - 1];
           const next = messages[index + 1];
 
-          // 현재 메시지가 내 메시지인지 여부
           const isMine = msg.userId === userId;
 
-          // createdAt을 "시:분" 형태로 변환하는 함수
-          const getTime = (date: string) =>
+          const formatTime = (date: string) =>
             new Date(date).toLocaleTimeString("ko-KR", {
               hour: "2-digit",
               minute: "2-digit",
               hour12: false,
             });
 
-          // 현재 / 이전 / 다음 메시지의 시간 (분 단위)
-          const currentTime = getTime(msg.createdAt);
-          const prevTime = prev ? getTime(prev.createdAt) : null;
-          const nextTime = next ? getTime(next.createdAt) : null;
+          const currentTime = formatTime(msg.createdAt);
+          const prevTime = prev ? formatTime(prev.createdAt) : null;
+          const nextTime = next ? formatTime(next.createdAt) : null;
 
-          // 같은 유저이고 같은 분에 보낸 메시지인지 (묶기 조건)
           const isSameGroup =
             prev && prev.userId === msg.userId && prevTime === currentTime;
 
-          // 그룹의 마지막 메시지인지 (시간 표시용)
           const isLastInGroup =
             !next || next.userId !== msg.userId || nextTime !== currentTime;
 
-          // 화면에 표시할 시간
-          const time = currentTime;
-
           return (
-            <div
-              key={msg.id}
-              className={`flex gap-2 items-end ${
-                isMine ? "justify-end" : "justify-start"
-              } ${isSameGroup ? "mt-1" : "mt-3"}`}
-            >
-              {/* 내 메시지일 때, 그룹 마지막에만 시간 표시 */}
-              {isMine && isLastInGroup && (
-                <span className="text-xs text-gray-400">{time}</span>
+            <div key={msg.id}>
+              {/* 상대 메시지: 그룹 처음이면 프로필 + 닉네임 표시 */}
+              {!isMine && !isSameGroup && (
+                <div className="flex items-center gap-2 mt-3">
+                  <div className="w-6 h-6 rounded-full bg-gray-500 flex items-center justify-center text-white text-xs">
+                    {msg.nickname[0]}
+                  </div>
+                  <span className="text-xs text-gray-400">{msg.nickname}</span>
+                </div>
               )}
 
-              {/* 메시지 말풍선 */}
+              {/* 메시지 + 시간 */}
               <div
-                className={`text-sm px-3 py-2 rounded-lg max-w-[70%] ${
-                  isMine ? "bg-[#6F4CDB] text-white" : "bg-[#374151] text-white"
-                }`}
+                className={`flex items-end gap-2 ${
+                  isMine ? "justify-end" : "justify-start"
+                } ${isSameGroup ? "mt-1" : "mt-3"}`}
               >
-                {/* 삭제된 메시지 처리 */}
-                {msg.deleted ? "삭제된 메시지입니다." : msg.content}
+                {/* 내 메시지: 그룹 마지막이면 시간 표시 */}
+                {isMine && isLastInGroup && (
+                  <span className="text-xs text-gray-400">{currentTime}</span>
+                )}
 
-                {/* 수정된 메시지 표시 */}
-                {msg.edited && !msg.deleted && (
-                  <span className="ml-1 text-xs text-gray-300">(수정됨)</span>
+                {/* 메시지 말풍선 */}
+                <div
+                  className={`text-sm px-3 py-2 rounded-lg max-w-[70%] break-words ${
+                    isMine
+                      ? "bg-[#6F4CDB] text-white rounded-tr-lg rounded-tl-lg rounded-bl-lg"
+                      : "bg-[#374151] text-white rounded-tr-lg rounded-tl-lg rounded-br-lg"
+                  }`}
+                >
+                  {msg.deleted ? "삭제된 메시지입니다." : msg.content}
+                  {msg.edited && !msg.deleted && (
+                    <span className="ml-1 text-xs text-gray-300">(수정됨)</span>
+                  )}
+                </div>
+
+                {/* 상대 메시지: 그룹 마지막이면 시간 표시 */}
+                {!isMine && isLastInGroup && (
+                  <span className="text-xs text-gray-400">{currentTime}</span>
                 )}
               </div>
-
-              {/* 상대 메시지일 때, 그룹 마지막에만 시간 표시 */}
-              {!isMine && isLastInGroup && (
-                <span className="text-xs text-gray-400">{time}</span>
-              )}
             </div>
           );
         })}
@@ -171,7 +174,12 @@ export default function ChatPanel({
         <input
           value={input}
           onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && handleSend()}
+          onKeyDown={e => {
+            if (e.key === "Enter") {
+              e.preventDefault(); // 필수
+              handleSend();
+            }
+          }}
           placeholder="메시지를 입력하세요..."
           className="flex-1 bg-[#111827] text-white text-sm px-3 py-2 rounded-md outline-none border border-[#1F2937] focus:border-[#6F4CDB]"
         />
