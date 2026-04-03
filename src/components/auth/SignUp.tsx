@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 import * as yup from "yup";
 
@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { useSessionAuth } from "@/hooks/useSessionAuth";
 import { useNavigate } from "react-router-dom";
 
 interface SignUpForm {
@@ -48,7 +47,6 @@ const schema = yup.object({
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const { login } = useSessionAuth();
 
   const {
     register,
@@ -59,38 +57,38 @@ const SignUp = () => {
     mode: "onBlur",
   });
 
-  // 회원가입 post
+  // 회원가입 API
   const postSignUp = async (data: SignUpForm) => {
+    const res = await axios.post("/api/v1/auth/signup", data);
+    return res.data;
+  };
+
+  // 이메일 인증 요청 API
+  const postVerifyEmail = async (email: string) => {
+    await axios.post("/api/v1/auth/email-verification/request", {
+      email,
+    });
+  };
+
+  const onSubmit = async (data: SignUpForm) => {
     try {
-      const res = await axios.post("/api/v1/auth/signup", data);
+      const res = await postSignUp(data);
+      console.log("user:", res.data.user);
+      await postVerifyEmail(data.email);
 
-      console.log("post한 user 정보", res.data.data.user);
-
-      console.log("post한 토큰 정보", res.data.data.tokens.accessToken);
-
-      const result = await Swal.fire({
-        title: "회원가입 완료",
-        text: "가입이 정상적으로 완료되었습니다.",
-        icon: "success",
-        theme: "dark",
-        width: 360,
-        scrollbarPadding: false,
-        customClass: {
-          popup: "swal-compact",
+      navigate("/auth/email", {
+        replace: true,
+        state: {
+          email: data.email,
         },
-        confirmButtonText: "확인",
-        confirmButtonColor: "#6F4CDB",
       });
-      if (result.isConfirmed) {
-        login();
-        navigate("/", { replace: true });
-      }
-    } catch (error: any) {
-      console.log("에러 발생 : ", error);
+    } catch (error: unknown) {
+      const err = error as AxiosError<any>;
+      console.log("에러 발생:", error);
 
-      // 409 에러는 데이터 중복에러
+      // 400 에러는 데이터 중복에러
       const message =
-        error.response?.status === 409
+        err.response?.status === 400
           ? "이미 사용 중인 이메일입니다."
           : "입력하신 정보가 올바르지 않습니다.<br/>다시 확인해주세요.";
 
@@ -108,10 +106,6 @@ const SignUp = () => {
         confirmButtonColor: "#6F4CDB",
       });
     }
-  };
-
-  const onSubmit = (data: SignUpForm) => {
-    postSignUp(data);
   };
 
   return (
